@@ -1,0 +1,19 @@
+{
+  "name": "price_monitoring",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon botprice"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^14.2.0",
+    "mongoose": "^6.1.7",
+    "nodemon": "^2.0.15",
+    "puppeteer": "^9.1.1",
+    "telegraf": "^3.39.0"
+  }
+}
