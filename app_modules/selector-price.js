@@ -1,5 +1,5 @@
 // функция возвращает соответствующий селектор для определенного сайта
-function getSelector(url) {
+function getSelectorPrice(url) {
 
 	if (url.includes('bike-components')) {
 		return '.price';
@@ -9,4 +9,4 @@ function getSelector(url) {
 	}
 }
 
-module.exports = getSelector;
+module.exports = getSelectorPrice;

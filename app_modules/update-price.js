@@ -1,11 +1,11 @@
 //bot здесь не используем, а передаем в parse
-const Item = require('../models/Item');
+const Product = require('../models/Product');
 const parse = require('./parse');
 
 async function control(bot) {
-	const created = await Item.find();
+	const created = await Product.find();
 	created.forEach(async element => {
-		await parse(element.user, element.nameRequest, element.url, bot)
+		await parse(element.user, element.url, bot)
 	});
 }
 

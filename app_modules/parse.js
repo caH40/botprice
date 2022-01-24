@@ -1,13 +1,15 @@
 // добавляет новый товар, если уже есть позиция у пользователя (проверка по url), то обновляет в базе
 const puppeteer = require('puppeteer');
 
-const getSelector = require('./selector');
+const getSelectorPrice = require('./selector-price');
+const getSelectorProduct = require('./selector-product');
 const cleaning = require('./cleaning');
+const Product = require('../models/Product');
 
-const Item = require('../models/Item');
-
-async function parse(username, nameRequest, url, bot) {
-	const selector = getSelector(url);
+async function parse(username, url, bot) {
+	const selectorPrice = getSelectorPrice(url);
+	const selectorProduct = getSelectorProduct(url);
+	// const selectorProduct = '.name-product'; //для bike-comp
 
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
@@ -16,10 +18,13 @@ async function parse(username, nameRequest, url, bot) {
 	if (url.includes('bike-discount.de')) {
 		await page.click('#uc-btn-accept-banner').catch(error => console.log(error));
 	}
-	await page.waitForSelector(selector);
-	let price = await page.$eval(selector, el => el.innerText);
+	await page.waitForSelector(selectorPrice);
+	let price = await page.$eval(selectorPrice, el => el.innerText);
+	const productName = await page.$eval(selectorProduct, el => el.innerText);
+
+
 	price = cleaning(price);
-	const created = await Item.findOne({ user: username, url: url });
+	const created = await Product.findOne({ user: username, url: url });
 
 	if (created) {
 		//проверка снижения цены
@@ -31,26 +36,23 @@ async function parse(username, nameRequest, url, bot) {
 
 			await bot.reply(textPriceFall, { parse_mode: 'html', disable_web_page_preview: true });
 		}
-		await Item.findOneAndUpdate(
+		await Product.findOneAndUpdate(
 			{ user: username, url: url },
 			{ $set: { date: new Date().toLocaleString(), price: price } }
 		)
 	} else {
-		const item = await new Item(
+		const product = await new Product(
 			{
 				user: username,
-				nameRequest: nameRequest,
+				nameRequest: productName,
 				url: url,
-				selector: selector,
+				domainName: url.match(/https:\/\/(.*?)\//)[1],
 				date: new Date().toLocaleString(),
 				price: price
 			});
-		item.save();
+		product.save().then(console.log('added data to mongo...'));
 	};
 	await browser.close();
 }
 
 module.exports = parse
-
-
-

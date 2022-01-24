@@ -1,12 +1,12 @@
 const { Schema, model } = require('mongoose');
 
-const itemSchema = new Schema({
+const productSchema = new Schema({
 	user: { type: String }, //nameid в телеграм
 	nameRequest: { type: String }, //имя присваемое запросу товара
 	url: { type: String }, // урл товара
-	selector: { type: String }, //селектор цены товара
+	domainName: { type: String },
 	date: { type: String },
 	price: { type: Number } // цена товара
 });
 
-module.exports = model('items', itemSchema);
+module.exports = model('products', productSchema);
