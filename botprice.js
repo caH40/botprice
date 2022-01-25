@@ -74,8 +74,8 @@ bot.on('callback_query', async (ctx) => {
 
 bot.launch();
 
-// const millisecondsInHour = 120000
-const millisecondsInHour = 3600000
+// const millisecondsInHour = 300000; //for dev
+const millisecondsInHour = 3600000; //for prod
 setInterval(() => {
 	updatePrice()
 }, millisecondsInHour);
