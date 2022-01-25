@@ -4,9 +4,15 @@ const parse = require('./parse');
 
 async function control(bot) {
 	const created = await Product.find();
-	created.forEach(async element => {
-		await parse(element.user, element.url, bot)
-	});
-}
+	let i = 0;
+	//задержка для каждого запуска parse, что бы открывался только одна копия браузера
+	created.forEach(element => {
+		i++
+		setTimeout(() => {
+			parse(element.user, element.url, bot);
+			// console.log(new Date().toLocaleTimeString())
+		}, 4000 * i);
+	})
+};
 
 module.exports = control;

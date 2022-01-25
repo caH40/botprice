@@ -1,6 +1,5 @@
 // запрос всех отслеживаемых товаров
 // принимает функция ctx и username
-
 const Product = require('../models/Product');
 
 async function requestProducts(bot, username) {
