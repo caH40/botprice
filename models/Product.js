@@ -2,11 +2,12 @@ const { Schema, model } = require('mongoose');
 
 const productSchema = new Schema({
 	user: { type: String }, //nameid в телеграм
+	userId: { type: Number },
 	nameRequest: { type: String }, //имя присваемое запросу товара
 	url: { type: String }, // урл товара
 	domainName: { type: String },
-	date: { type: String },
-	price: { type: Number } // цена товара
+	lastUpdate: { type: String },
+	prices: { type: Array } // цена товара
 });
 
 module.exports = model('products', productSchema);

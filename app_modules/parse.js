@@ -6,18 +6,18 @@ const getSelectorProduct = require('./selector-product');
 const addToDb = require('./addtodb');
 const { selectorBikeDisAccept, selectorBikeDisDelivery, selectorBikeDisCountry } = require('./text');
 
-async function parse(username, url, bot) {
+async function parse(url, ctx, username, userId) {
 	try {
 		const selectorPrice = getSelectorPrice(url);
 		const selectorProduct = getSelectorProduct(url);
-		const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] }).catch((error) => console.log(error));// for Ubuntu VPS
+		// const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] }).catch((error) => console.log(error));// for Ubuntu VPS
 		// const browser = await puppeteer.launch({ headless: false, slowMo: 200, devtools: true }); //for dev
-		// const browser = await puppeteer.launch();
+		const browser = await puppeteer.launch();
 		const page = await browser.newPage();
 		await page.goto(url)
 			.catch(error => {
-				console.error(error);
-				bot.reply('Ссылка не рабочая, попробуйте еще раз!');
+				console.error();
+				ctx.reply('Ссылка не рабочая, попробуйте еще раз!');
 			});
 
 		if (url.includes('bike-discount.de')) {
@@ -30,7 +30,7 @@ async function parse(username, url, bot) {
 		await page.waitForSelector(selectorPrice);
 		const price = await page.$eval(selectorPrice, el => el.innerText);
 		const productName = await page.$eval(selectorProduct, el => el.innerText);
-		await addToDb(price, productName, username, url, bot);
+		await addToDb(price, productName, url, ctx, username, userId);
 		await browser.close();
 	} catch (error) {
 		console.log(error);

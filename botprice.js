@@ -9,6 +9,7 @@ const superWizard = require('./app_modules/wizard');
 const updatePrice = require('./app_modules/update-price');
 const requestProducts = require('./app_modules/request');
 const deleteProduct = require('./app_modules/delete-product');
+const priceMonitoring = require('./app_modules/price-monitoring');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -29,14 +30,16 @@ bot.catch((error, ctx) => {
 	console.log(`Oops, encountered an error for ${ctx.updateType}`, error);
 });
 
+const htmlDisPrev = { parse_mode: 'html', disable_web_page_preview: true };
+
 bot.start(async (ctx) => {
 	const userName = ctx.update.message.from.username;
-	await ctx.reply(`Привет ${userName ? userName : 'незнакомец'} ! ${text.start}`, { parse_mode: 'html', disable_web_page_preview: true })
+	await ctx.reply(`Привет ${userName ? userName : 'незнакомец'} ! ${text.start}`, htmlDisPrev)
 		.catch((error) => console.log(error));
 });
 
 bot.help(async (ctx) => {
-	await ctx.reply(text.commands, { parse_mode: 'html', disable_web_page_preview: true }).catch((error) => console.log(error));
+	await ctx.reply(text.commands, htmlDisPrev).catch((error) => console.log(error));
 });
 
 // сцены
@@ -71,11 +74,16 @@ bot.on('callback_query', async (ctx) => {
 	await Product.findByIdAndDelete(id)
 		.then(ctx.reply('Товар удален.'));
 })
+const millisecondsInHour = 3600000;
+bot.launch()
+	.then(async () => {
+		await bot.telegram.sendMessage(412801722, 'restart...');
+		setInterval(() => {
+			priceMonitoring(bot)
+		}, millisecondsInHour);
+	})
+	.catch(error => console.log(error));
 
-bot.launch();
-
-// const millisecondsInHour = 300000; //for dev
-const millisecondsInHour = 3600000; //for prod
 setInterval(() => {
 	updatePrice()
 }, millisecondsInHour);

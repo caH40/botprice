@@ -4,8 +4,8 @@ function cleaning(price) {
 		const priceLength = price.length;
 		const euro = price.slice(0, priceLength - 2);
 		const cent = price.slice(priceLength - 2);
-		price = `${euro}.${cent}`
-		return price
+		price = `${euro}.${cent}`;
+		return Number(price);
 	} catch (error) {
 		console.log(error)
 	}
