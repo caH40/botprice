@@ -31,6 +31,8 @@ bot.catch((error, ctx) => {
 });
 
 const htmlDisPrev = { parse_mode: 'html', disable_web_page_preview: true };
+const millisecondsInHour = 3600000;
+const millisecondsInMinute = 60000;
 
 bot.start(async (ctx) => {
 	const userName = ctx.update.message.from.username;
@@ -44,48 +46,55 @@ bot.help(async (ctx) => {
 
 // сцены
 bot.command('/new', async (ctx) => {
-	await ctx.scene.enter('super-wizard');
+	await ctx.scene.enter('super-wizard').catch((error) => console.log(error));
 });
 
 bot.command('/request', async (ctx) => {
 	const username = ctx.update.message.from.username;
-	await ctx.reply('Отслеживаемые товары:');
-	await requestProducts(ctx, username);
-});
-
-// '/update'на время разработки
-bot.command('/update', async (ctx) => {
-	await ctx.reply('Обновление цен в базе данных в разработке....');
-	await updatePrice(ctx);
+	await ctx.reply('Отслеживаемые товары:').catch((error) => console.log(error));
+	await requestProducts(ctx, username).catch((error) => console.log(error));
 });
 
 bot.command('/delete', async (ctx) => {
-	const keyboard = await deleteProduct(ctx);
-	if (keyboard[0]) {
-		await ctx.reply('Выберите исключаемый велотовар из отслеживания цены:', { reply_markup: { inline_keyboard: keyboard } });
-	} else {
-		await ctx.reply('Вы не отслеживаете цены на велотовары.');
+	try {
+		const keyboard = await deleteProduct(ctx);
+		if (keyboard[0]) {
+			await ctx.reply('Выберите исключаемый велотовар из отслеживания цены:', { reply_markup: { inline_keyboard: keyboard } });
+			setTimeout(async () => {
+				await ctx.deleteMessage(ctx.update.message.message_id).catch((error) => console.log(error));
+				await ctx.deleteMessage(ctx.update.message.message_id + 1).catch((error) => console.log(error));
+			}, millisecondsInMinute);
+		} else {
+			await ctx.reply('Вы не отслеживаете цены на велотовары.');
+		}
+	} catch (error) {
+		console.log(error)
 	}
 });
 
 // обработка всех нажатий инлайн кнопок
 bot.on('callback_query', async (ctx) => {
 	const id = ctx.callbackQuery.data;
-	await Product.findByIdAndDelete(id)
-		.then(ctx.reply('Товар удален.'));
+	await Product.findByIdAndDelete(id);
+	await ctx.reply('Товар удален.');
+	setTimeout(async () => {
+		await ctx.deleteMessage(ctx.update.callback_query.message.message_id + 1).catch((error) => console.log(error));
+	}, millisecondsInMinute)
+
 })
-const millisecondsInHour = 3600000;
+
+
 bot.launch()
 	.then(async () => {
-		await bot.telegram.sendMessage(412801722, 'restart...');
+		await bot.telegram.sendMessage(process.env.MY_TELEGRAM_ID, 'restart...');
 		setInterval(() => {
 			priceMonitoring(bot)
 		}, millisecondsInHour);
 	})
 	.catch(error => console.log(error));
 
-setInterval(() => {
-	updatePrice()
+setInterval(async () => {
+	await updatePrice().catch((error) => console.log(error));
 }, millisecondsInHour);
 
 // Enable graceful stop

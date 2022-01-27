@@ -10,15 +10,14 @@ async function parse(url, ctx, username, userId) {
 	try {
 		const selectorPrice = getSelectorPrice(url);
 		const selectorProduct = getSelectorProduct(url);
+
 		const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] }).catch((error) => console.log(error));// for Ubuntu VPS
 		// const browser = await puppeteer.launch({ headless: false, slowMo: 200, devtools: true }); //for dev
 		// const browser = await puppeteer.launch();
+
 		const page = await browser.newPage();
 		await page.goto(url)
-			.catch(error => {
-				console.error();
-				ctx.reply('Ссылка не рабочая, попробуйте еще раз!');
-			});
+			.catch((error) => console.log(new Date().toLocaleString(), error));
 
 		if (url.includes('bike-discount.de')) {
 			await page.waitForSelector(selectorBikeDisAccept);

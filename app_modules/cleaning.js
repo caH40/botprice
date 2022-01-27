@@ -7,7 +7,7 @@ function cleaning(price) {
 		price = `${euro}.${cent}`;
 		return Number(price);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 	}
 };
 

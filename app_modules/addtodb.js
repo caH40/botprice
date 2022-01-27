@@ -28,7 +28,7 @@ async function addToDb(price, productName, url, ctx, username, userId) {
 			await product.save()
 				.then(console.log('added data to mongo...'))
 				.then(ctx.reply(`${productName} успешно добавлен.\nТекущая цена ${price}€`))
-				.catch(error => console.error())
+				.catch(error => console.error(error))
 		};
 	} catch (error) {
 		console.log(error);
