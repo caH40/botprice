@@ -13,27 +13,25 @@ async function parse(url, ctx, username, userId) {
 
 		const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] }).catch((error) => console.log(error));// for Ubuntu VPS
 		// const browser = await puppeteer.launch({ headless: false, slowMo: 200, devtools: true }); //for dev
-		// const browser = await puppeteer.launch();
-
-		const page = await browser.newPage();
+		// const browser = await puppeteer.launch().catch(error => console.log(error));
+		const page = await browser.newPage().catch(error => console.log(error));
 		await page.goto(url)
 			.catch((error) => console.log(new Date().toLocaleString(), error));
 
 		if (url.includes('bike-discount.de')) {
-			await page.waitForSelector(selectorBikeDisAccept);
+			await page.waitForSelector(selectorBikeDisAccept).catch(error => console.log(error));
 			await page.click(selectorBikeDisAccept).catch(error => console.log(error));
 			await page.click(selectorBikeDisDelivery).catch(error => console.log('click delivery', error));
-			await page.waitForSelector(selectorBikeDisCountry);
+			await page.waitForSelector(selectorBikeDisCountry).catch(error => console.log(error));
 			await page.click(selectorBikeDisCountry).catch(error => console.log('click Russia', error));
 		}
-		await page.waitForSelector(selectorPrice);
-		const price = await page.$eval(selectorPrice, el => el.innerText);
+		await page.waitForSelector(selectorPrice).catch(error => console.log(error));
+		const price = await page.$eval(selectorPrice, el => el.innerText).catch(error => console.log(error));
 		const productName = await page.$eval(selectorProduct, el => el.innerText);
-		await addToDb(price, productName, url, ctx, username, userId);
-		await browser.close();
+		await addToDb(price, productName, url, ctx, username, userId).catch(error => console.log(error));
+		await browser.close().catch(error => console.log(error));
 	} catch (error) {
 		console.log(error);
 	}
 }
-
 module.exports = parse;

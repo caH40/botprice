@@ -32,6 +32,7 @@ bot.catch((error, ctx) => {
 
 const htmlDisPrev = { parse_mode: 'html', disable_web_page_preview: true };
 const millisecondsInHour = 3600000;
+// const millisecondsInHour = 300000; //!! for dev
 const millisecondsInMinute = 60000;
 
 bot.start(async (ctx) => {
