@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 async function requestProducts(ctx, username) {
 	try {
 		const created = await Product.find({ user: username });
-		let post;
+		let post = '';
 		let elementPriceLength;
 		let priceLast;
 		created.forEach(async element => {

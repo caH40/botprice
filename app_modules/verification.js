@@ -2,16 +2,24 @@ const Product = require('../models/Product');
 
 async function verification(url, username, ctx) {
 	try {
-		const found = await Product.findOne({ url: url, user: username });
-		if (found) {
-			const priceLength = found.prices.length;
+		const product = await Product.findOne({ url: url, user: username });
+		if (product) {
+			const priceLength = product.prices.length;
 			if (priceLength !== 1) {
 				await ctx.reply(`
-				Вы уже отслеживаете данную позицию!\n${found.nameRequest}.\nТекущая цена ${found.prices[priceLength - 1].price}${found.currency}.`);
+				Вы уже отслеживаете данную позицию!\n${product.nameRequest}.\nТекущая цена ${product.prices[priceLength - 1].price}${product.currency}.`);
 			} else {
-				await ctx.reply('Вы недавно добавили велотовар, цена не обновлялась!')
+				await ctx.reply('Вы недавно добавили этот велотовар, цена не обновлялась!')
 			}
 		}
+		// проверка количества отслеживаемых велотоваров, можно не больше 10
+		const productArr = await Product.find({ user: username });
+		const productArrLength = productArr.length;
+		if (productArrLength > 9) {
+			await ctx.reply('К сожалению, можно отслеживать не более 10ти позиций.');
+			return false
+		}
+
 		// const domainName = url.match(/https:\/\/(.*?)\//);
 		const condition = (url.includes('bike-components')) || (url.includes('bike-discount')) || (url.includes('chainreactioncycles'));
 		if (condition) {
