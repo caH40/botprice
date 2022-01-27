@@ -18,12 +18,12 @@ const superWizard = new WizardScene('super-wizard',
 
 	async ctx => {
 		try {
-			const username = ctx.message.from.username;
-			const userId = ctx.message.from.id;
-			ctx.wizard.state.data.url = ctx.message.text;
-			const checker = await verification(ctx.wizard.state.data.url, username, ctx);
+			const username = await ctx.message.from.username;
+			const userId = await ctx.message.from.id;
+			const url = await ctx.message.text;
+			const checker = await verification(url, username, ctx);
 			if (checker) {
-				await parse(ctx.wizard.state.data.url, ctx, username, userId);
+				await parse(url, ctx, username, userId);
 			}
 			return await ctx.scene.leave();
 		} catch (error) {

@@ -2,6 +2,10 @@ const Product = require('../models/Product');
 
 async function verification(url, username, ctx) {
 	try {
+		if (!username) {
+			await ctx.reply('Что бы воспользоваться сервисом необходимо заполнить "username" в настройках своего профиля телеграм.');
+			return false
+		}
 		const product = await Product.findOne({ url: url, user: username });
 		if (product) {
 			const priceLength = product.prices.length;
@@ -9,7 +13,7 @@ async function verification(url, username, ctx) {
 				await ctx.reply(`
 				Вы уже отслеживаете данную позицию!\n${product.nameRequest}.\nТекущая цена ${product.prices[priceLength - 1].price}${product.currency}.`);
 			} else {
-				await ctx.reply('Вы недавно добавили этот велотовар, цена не обновлялась!')
+				await ctx.reply('Вы уже отслеживаете данную позицию!')
 			}
 		}
 		// проверка количества отслеживаемых велотоваров, можно не больше 10
