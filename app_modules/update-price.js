@@ -2,7 +2,7 @@
 const Product = require('../models/Product');
 const parse = require('./parse');
 
-const millisecondsInFiveSecond = 5000;
+const millisecondsInSevenSecond = 7000;
 
 async function control(ctx) {
 	try {
@@ -15,7 +15,7 @@ async function control(ctx) {
 				const username = element.user;
 				const userId = element.userId;
 				parse(element.url, ctx, username, userId);
-			}, millisecondsInFourSecond * i);
+			}, millisecondsInSevenSecond * i);
 		})
 	} catch (error) {
 		console.log(error);

@@ -4,7 +4,13 @@ const cleaning = require('./cleaning');
 
 async function addToDb(price, productName, url, ctx, username, userId) {
 	try {
-		price = cleaning(price);
+		price = cleaning(price, url);
+		let currency = '';
+		if (url.includes('chainreactioncycles')) {
+			currency = 'RUB';
+		} else {
+			currency = '€';
+		}
 		const date = new Date().getTime();
 		const dateString = new Date().toLocaleString();
 		let productDb = await Product.findOne({ user: username, url: url });
@@ -23,11 +29,12 @@ async function addToDb(price, productName, url, ctx, username, userId) {
 					url: url,
 					domainName: domainName,
 					lastUpdate: dateString,
-					prices: { date, price }
+					prices: { date, price },
+					currency: currency
 				});
 			await product.save()
 				.then(console.log('added data to mongo...'))
-				.then(ctx.reply(`${productName} успешно добавлен.\nТекущая цена ${price}€`))
+				.then(ctx.reply(`${productName} успешно добавлен.\nТекущая цена ${price}${currency}`))
 				.catch(error => console.error(error))
 		};
 	} catch (error) {

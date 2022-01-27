@@ -7,7 +7,8 @@ const productSchema = new Schema({
 	url: { type: String }, // урл товара
 	domainName: { type: String },
 	lastUpdate: { type: String },
-	prices: { type: Array } // цена товара
+	prices: { type: Array }, // цена товара
+	currency: { type: String }
 });
 
 module.exports = model('products', productSchema);
