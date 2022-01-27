@@ -2,7 +2,7 @@
 const Product = require('../models/Product');
 const parse = require('./parse');
 
-const millisecondsInFourSecond = 4000;
+const millisecondsInFiveSecond = 5000;
 
 async function control(ctx) {
 	try {
