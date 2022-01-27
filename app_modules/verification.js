@@ -4,8 +4,13 @@ async function verification(url, username, ctx) {
 	try {
 		const found = await Product.findOne({ url: url, user: username });
 		if (found) {
-			await ctx.reply(`
-			Вы уже отслеживаете данную позицию!\n${found.nameRequest}.\nТекущая цена ${found.price}€.`);
+			const priceLength = found.prices.length;
+			if (priceLength !== 1) {
+				await ctx.reply(`
+				Вы уже отслеживаете данную позицию!\n${found.nameRequest}.\nТекущая цена ${found.prices[priceLength - 1].price}€.`);
+			} else {
+				await ctx.reply('Вы недавно добавили велотовар, цена не обновлялась!')
+			}
 		}
 		// const domainName = url.match(/https:\/\/(.*?)\//);
 		const condition = (url.includes('bike-components')) || (url.includes('bike-discount'));
