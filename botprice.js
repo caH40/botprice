@@ -9,6 +9,7 @@ const superWizard = require('./app_modules/wizard');
 const updatePrice = require('./app_modules/update-price');
 const requestProducts = require('./app_modules/request');
 const deleteProduct = require('./app_modules/delete-product');
+const priceChanges = require('./app_modules/price-changes');
 const priceMonitoring = require('./app_modules/price-monitoring');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -56,6 +57,11 @@ bot.command('/request', async (ctx) => {
 	await requestProducts(ctx, username).catch((error) => console.log(error));
 });
 
+bot.command('/changes', async (ctx) => {
+	const username = ctx.update.message.from.username;
+	await priceChanges(ctx, username).catch((error) => console.log(error));
+});
+
 bot.command('/delete', async (ctx) => {
 	try {
 		const keyboard = await deleteProduct(ctx);
@@ -81,7 +87,6 @@ bot.on('callback_query', async (ctx) => {
 	setTimeout(async () => {
 		await ctx.deleteMessage(ctx.update.callback_query.message.message_id + 1).catch((error) => console.log(error));
 	}, millisecondsInMinute)
-
 })
 
 
