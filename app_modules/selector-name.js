@@ -10,6 +10,9 @@ function getSelectorName(url) {
 	if (url.includes('chainreactioncycles')) {
 		return '#crcPDP1 > div.left-column > li.crcPDPLeft > ul > li.crcPDPTitle > h1';
 	}
+	if (url.includes('bike24')) {
+		return '#productDetail > div.product-detail-information-area > div.product-detail-information-area__header > h1';
+	}
 }
 
 module.exports = getSelectorName;

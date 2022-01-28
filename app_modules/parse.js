@@ -11,11 +11,16 @@ async function parse(url, ctx, username, userId) {
 		const selectorPrice = getSelectorPrice(url);
 		const selectorName = getSelectorName(url);
 
-		const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] }).catch((error) => console.log(error));// for Ubuntu VPS
+		// const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium-browser', args: ['--no-sandbox'] }).catch((error) => console.log(error));// for Ubuntu VPS
 		// const browser = await puppeteer.launch({ headless: false, slowMo: 200, devtools: true }); //!!for dev
-		// const browser = await puppeteer.launch().catch(error => console.log(error)); //for win
+		const browser = await puppeteer.launch().catch(error => console.log(error)); //for win
 
 		const page = await browser.newPage().catch(error => console.log(error));
+		await page.setViewport({
+			width: 1024,
+			height: 768,
+			deviceScaleFactor: 1
+		});
 		await page.goto(url)
 			.catch((error) => console.log(new Date().toLocaleString(), error));
 

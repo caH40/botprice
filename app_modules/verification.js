@@ -25,7 +25,7 @@ async function verification(url, username, ctx) {
 		}
 
 		// const domainName = url.match(/https:\/\/(.*?)\//);
-		const condition = (url.includes('bike-components')) || (url.includes('bike-discount')) || (url.includes('chainreactioncycles'));
+		const condition = (url.includes('bike-components')) || (url.includes('bike-discount')) || (url.includes('chainreactioncycles') || (url.includes('bike24')));
 		if (condition) {
 			return true
 		} else {
