@@ -1,20 +1,19 @@
 const Product = require('../models/Product');
+const { messageBadUrl, messageNeedUsername } = require('./text');
 
 async function verification(url, username, ctx) {
 	try {
+		//если нет username у пользователя, то сервис не доступен
 		if (!username) {
-			await ctx.reply('Что бы воспользоваться сервисом необходимо заполнить "username" в настройках своего профиля телеграм.');
+			await ctx.reply(messageNeedUsername);
 			return false
 		}
+		//если товар уже в базе отслеживания, то выдается сообщение
 		const product = await Product.findOne({ url: url, user: username });
 		if (product) {
 			const priceLength = product.prices.length;
-			if (priceLength !== 1) {
-				await ctx.reply(`
-				Вы уже отслеживаете данную позицию!\n${product.nameRequest}.\nТекущая цена ${product.prices[priceLength - 1].price}${product.currency}.`);
-			} else {
-				await ctx.reply('Вы уже отслеживаете данную позицию!')
-			}
+			await ctx.reply(`Вы уже отслеживаете данную позицию!\n${product.nameRequest}.\nТекущая цена ${product.prices[priceLength - 1].price}${product.currency}.`);
+			return false
 		}
 		// проверка количества отслеживаемых велотоваров, можно не больше 10
 		const productArr = await Product.find({ user: username });
@@ -25,13 +24,18 @@ async function verification(url, username, ctx) {
 		}
 
 		// const domainName = url.match(/https:\/\/(.*?)\//);
-		const condition = (url.includes('bike-components')) || (url.includes('bike-discount')) || (url.includes('chainreactioncycles') || (url.includes('bike24')));
+		// проверка наличия названий сайтов для мониторинга в url
+		let condition = false;
+		const site = ['bike-components', 'bike-discount', 'chainreactioncycles'];
+		site.forEach(element => {
+			condition = condition || url.includes(element);
+		})
+		// если нет разрешенных сайтов в url, то сообщение
 		if (condition) {
 			return true
 		} else {
-			const message = `Ссылка не рабочая, поддерживаются сайты:\nhttps://www.bike-components.de/en/\nhttps://www.bike-discount.de/en/\nhttps://www.chainreactioncycles.com/ru/ru\nПопробуйте еще раз! /new`;
 			const htmlDisPrev = { parse_mode: 'html', disable_web_page_preview: true };
-			await ctx.reply(message, htmlDisPrev);
+			await ctx.reply(messageBadUrl, htmlDisPrev);
 			return false
 		}
 	} catch (error) {
