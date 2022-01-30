@@ -2,7 +2,7 @@
 const Product = require('../models/Product');
 const cleaning = require('./cleaning');
 
-async function addToDb(price, productName, url, ctx, username, userId) {
+async function addToDb(price, productName, url, bot, username, userId) {
 	try {
 		price = cleaning(price, url);
 		let currency = '';
@@ -34,7 +34,7 @@ async function addToDb(price, productName, url, ctx, username, userId) {
 				});
 			await product.save()
 				.then(console.log('added data to mongo...'))
-				.then(ctx.reply(`${productName} успешно добавлен.\nТекущая цена ${price}${currency}`))
+				.then(bot.telegram.sendMessage(userId, (`${productName} успешно добавлен.\nТекущая цена ${price}${currency}`)))
 				.catch(error => console.error(error))
 		};
 	} catch (error) {

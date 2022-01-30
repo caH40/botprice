@@ -6,7 +6,8 @@ async function priceMonitoring(bot) {
 		const productDbArr = await Product.find();
 		productDbArr.forEach(async element => {
 			elementPriceLength = element.prices.length;
-			if (elementPriceLength !== 1) {
+			// выполнять вычисление изменение цены только когда в массиве цен элементов больше одного
+			if (elementPriceLength > 1) {
 				priceNew = element.prices[elementPriceLength - 1].price;
 				priceOld = element.prices[elementPriceLength - 2].price;
 				if (priceOld > priceNew) {
@@ -16,7 +17,7 @@ async function priceMonitoring(bot) {
 				}
 			}
 		});
-		console.log(`${new Date().toLocaleString()}- обновление в БД`);  //!! for dev
+		console.log(`${new Date().toLocaleString()}- проверка изменения цен`);  //!! for dev
 	} catch (error) {
 		console.log(error);
 	}

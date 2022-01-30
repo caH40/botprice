@@ -54,7 +54,7 @@ bot.command('/new', async (ctx) => {
 bot.command('/request', async (ctx) => {
 	const username = ctx.update.message.from.username;
 	await ctx.reply('Отслеживаемые товары:').catch((error) => console.log(error));
-	await requestProducts(ctx, username).catch((error) => console.log(error));
+	await requestProducts(bot, username).catch((error) => console.log(error));
 });
 
 bot.command('/changes', async (ctx) => {
@@ -93,15 +93,13 @@ bot.on('callback_query', async (ctx) => {
 bot.launch()
 	.then(async () => {
 		await bot.telegram.sendMessage(process.env.MY_TELEGRAM_ID, 'restart...');
-		setInterval(() => {
-			priceMonitoring(bot)
+		setInterval(async () => {
+			await updatePrice(bot).catch((error) => console.log(error));
+			await priceMonitoring(bot).catch((error) => console.log(error));
 		}, millisecondsInHour);
 	})
 	.catch(error => console.log(error));
 
-setInterval(async () => {
-	await updatePrice().catch((error) => console.log(error));
-}, millisecondsInHour);
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));

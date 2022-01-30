@@ -6,7 +6,7 @@ const getSelectorName = require('./selector-name');
 const addToDb = require('./addtodb');
 const { selectorBikeDisAccept, selectorBikeDisDelivery, selectorBikeDisCountry } = require('./text');
 
-async function parse(url, ctx, username, userId) {
+async function parse(url, bot, username, userId) {
 	try {
 		const selectorPrice = getSelectorPrice(url);
 		const selectorName = getSelectorName(url);
@@ -35,7 +35,7 @@ async function parse(url, ctx, username, userId) {
 		await page.waitForSelector(selectorPrice).catch(error => console.log(error));
 		const price = await page.$eval(selectorPrice, el => el.innerText).catch(error => console.log(error));
 		const productName = await page.$eval(selectorName, el => el.innerText);
-		await addToDb(price, productName, url, ctx, username, userId).catch(error => console.log(error));
+		await addToDb(price, productName, url, bot, username, userId).catch(error => console.log(error));
 		await browser.close().catch(error => console.log(error));
 	} catch (error) {
 		console.log(error);
