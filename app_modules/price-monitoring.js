@@ -16,7 +16,7 @@ async function priceMonitoring(bot) {
 				}
 			}
 		});
-		// console.log(`${new Date().toLocaleString()}- обновление в БД`);  //!! for dev
+		console.log(`${new Date().toLocaleString()}- обновление в БД`);  //!! for dev
 	} catch (error) {
 		console.log(error);
 	}

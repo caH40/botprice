@@ -5,7 +5,8 @@ async function priceChanges(ctx, username) {
 		const productArr = await Product.find({ user: username });
 		let countNull = 0;
 		productArr.forEach(product => {
-			let post = `${product.nameRequest}\n`;
+			const firstPost = `${product.nameRequest}\n<a href="${product.url}">${product.domainName}\n</a>`;
+			let post = firstPost
 
 			for (let index = 0; index < product.prices.length - 1; index++) {
 				if (index + 1 < product.prices.length) {
@@ -23,8 +24,8 @@ async function priceChanges(ctx, username) {
 			if (productArr.length === countNull) {
 				ctx.reply(`Не было изменений цен.`).catch(error => console.log(error));
 			}
-			if (post !== `${product.nameRequest}\n`) {
-				ctx.reply(post).catch(error => console.log(error));
+			if (post !== firstPost) {
+				ctx.reply(post, { parse_mode: 'html', disable_web_page_preview: true }).catch(error => console.log(error));
 			}
 
 
