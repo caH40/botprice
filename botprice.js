@@ -48,9 +48,6 @@ bot.help(async (ctx) => {
 });
 
 // сцены
-bot.command('/description', async (ctx) => {
-	await ctx.reply(text.description, htmlDisPrev).catch((error) => console.log(error));
-});
 bot.command('/new', async (ctx) => {
 	await ctx.scene.enter('super-wizard').catch((error) => console.log(error));
 });
