@@ -13,6 +13,9 @@ function getSelectorName(url) {
 	if (url.includes('bike24')) {
 		return '#productDetail > div.product-detail-information-area > div.product-detail-information-area__header > h1';
 	}
+	if (url.includes('aliexpress.ru')) {
+		return '.Product_Name__productTitleText__hntp3';
+	}
 }
 
 module.exports = getSelectorName;
