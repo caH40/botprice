@@ -34,9 +34,7 @@ async function parse(url, bot, username, userId) {
 
 		await page.waitForSelector(selectorPrice).catch(error => console.log(error));
 		const price = await page.$eval(selectorPrice, el => el.innerText).catch(error => console.log(error));
-		console.log(price)
 		const productName = await page.$eval(selectorName, el => el.innerText);
-		console.log(productName)
 		await addToDb(price, productName, url, bot, username, userId).catch(error => console.log(error));
 		await browser.close().catch(error => console.log(error));
 	} catch (error) {

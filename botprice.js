@@ -48,9 +48,6 @@ bot.help(async (ctx) => {
 });
 
 // сцены
-bot.command('/description', async (ctx) => {
-	await ctx.reply(text.description, htmlDisPrev).catch((error) => console.log(error));
-});
 bot.command('/new', async (ctx) => {
 	await ctx.scene.enter('super-wizard').catch((error) => console.log(error));
 });
@@ -64,6 +61,10 @@ bot.command('/request', async (ctx) => {
 bot.command('/changes', async (ctx) => {
 	const username = ctx.update.message.from.username;
 	await priceChanges(ctx, username).catch((error) => console.log(error));
+});
+
+bot.command('/description', async (ctx) => {
+	await ctx.reply(text.description, htmlDisPrev).catch((error) => console.log(error));
 });
 
 bot.command('/delete', async (ctx) => {
