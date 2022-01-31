@@ -15,7 +15,7 @@ async function priceChanges(ctx, username) {
 				const date = new Date(product.prices[index + 1].date).toLocaleString();
 				if (compared !== 0) {
 					;
-					post = post + `${date}, изменение: ${compared < 0 ? compared.toFixed(2) : "+" + compared.toFixed(2)}\n`;
+					post = post + `${date}, изменение: ${compared < 0 ? compared.toFixed(2) : "+" + compared.toFixed(2)}${product.currency}\n`;
 				} else {
 
 					countNull++
