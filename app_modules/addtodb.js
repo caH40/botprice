@@ -6,7 +6,7 @@ async function addToDb(price, productName, url, bot, username, userId) {
 	try {
 		price = cleaning(price, url);
 		let currency = '';
-		if (url.includes('chainreactioncycles')) {
+		if (url.includes('chainreactioncycles') || url.includes('aliexpress.ru')) {
 			currency = 'RUB';
 		} else {
 			currency = '€';

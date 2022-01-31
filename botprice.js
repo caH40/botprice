@@ -33,6 +33,7 @@ bot.catch((error, ctx) => {
 
 const htmlDisPrev = { parse_mode: 'html', disable_web_page_preview: true };
 const millisecondsInHour = 3600000;
+const millisecondsInTwentyMinutes = 1200000;
 // const millisecondsInHour = 300000; //!! for dev
 const millisecondsInMinute = 60000;
 
@@ -47,6 +48,9 @@ bot.help(async (ctx) => {
 });
 
 // сцены
+bot.command('/description', async (ctx) => {
+	await ctx.reply(text.description, htmlDisPrev).catch((error) => console.log(error));
+});
 bot.command('/new', async (ctx) => {
 	await ctx.scene.enter('super-wizard').catch((error) => console.log(error));
 });
@@ -96,7 +100,7 @@ bot.launch()
 		setInterval(async () => {
 			await updatePrice(bot).catch((error) => console.log(error));
 			await priceMonitoring(bot).catch((error) => console.log(error));
-		}, millisecondsInHour);
+		}, millisecondsInTwentyMinutes);
 	})
 	.catch(error => console.log(error));
 

@@ -13,6 +13,9 @@ function getSelectorPrice(url) {
 		if (url.includes('bike24')) {
 			return '#add-to-cart > div > form > div.product-detail-price > div > p';
 		}
+		if (url.includes('aliexpress.ru')) {
+			return '.product-price-current';
+		}
 	} catch (error) {
 		console.log(error);
 	}

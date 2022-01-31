@@ -1,3 +1,4 @@
+require('dotenv').config;
 const Product = require('../models/Product');
 const { messageBadUrl, messageNeedUsername } = require('./text');
 
@@ -18,7 +19,7 @@ async function verification(url, username, ctx) {
 		// проверка количества отслеживаемых велотоваров, можно не больше 10
 		const productArr = await Product.find({ user: username });
 		const productArrLength = productArr.length;
-		if (productArrLength > 9) {
+		if (productArrLength > 9 && productArr[0].userId != process.env.MY_TELEGRAM_ID) {
 			await ctx.reply('К сожалению, можно отслеживать не более 10ти позиций.');
 			return false
 		}
@@ -26,7 +27,7 @@ async function verification(url, username, ctx) {
 		// const domainName = url.match(/https:\/\/(.*?)\//);
 		// проверка наличия названий сайтов для мониторинга в url
 		let condition = false;
-		const site = ['bike-components', 'bike-discount', 'chainreactioncycles'];
+		const site = ['bike-components', 'bike-discount', 'chainreactioncycles', 'aliexpress.ru'];
 		site.forEach(element => {
 			condition = condition || url.includes(element);
 		})
