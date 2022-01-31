@@ -53,9 +53,9 @@ bot.command('/new', async (ctx) => {
 });
 
 bot.command('/request', async (ctx) => {
-	const username = ctx.update.message.from.username;
+	const userId = await ctx.message.from.id;
 	await ctx.reply('Отслеживаемые товары:').catch((error) => console.log(error));
-	await requestProducts(bot, username).catch((error) => console.log(error));
+	await requestProducts(bot, userId).catch((error) => console.log(error));
 });
 
 bot.command('/changes', async (ctx) => {

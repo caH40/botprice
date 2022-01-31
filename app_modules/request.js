@@ -2,9 +2,9 @@
 // принимает функция ctx и username
 const Product = require('../models/Product');
 
-async function requestProducts(bot, username) {
+async function requestProducts(bot, userId) {
 	try {
-		const created = await Product.find({ user: username });
+		const created = await Product.find({ user: userId });
 		let post = '';
 		let elementPriceLength;
 		let priceLast;
@@ -14,7 +14,7 @@ async function requestProducts(bot, username) {
 			post = post + `${element.nameRequest} - ${priceLast}${element.currency}\n<a href="${element.url}">${element.domainName}</a>\n\n`;
 		});
 		const notNull = post ? post : 'Вы не отслеживаете цены на велотовары.';
-		await bot.telegram.sendMessage(created[0].userId, notNull, { parse_mode: 'html', disable_web_page_preview: true });
+		await bot.telegram.sendMessage(userId, notNull, { parse_mode: 'html', disable_web_page_preview: true });
 	} catch (error) {
 		console.log(error);
 	}
