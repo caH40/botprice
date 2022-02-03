@@ -13,6 +13,7 @@ async function addToDb(price, productName, url, bot, username, userId) {
 		}
 		const date = new Date().getTime();
 		const dateString = new Date().toLocaleString();
+		//!! два раза один и тот же запрос в БД
 		let productDb = await Product.findOne({ user: username, url: url });
 		if (productDb) {
 			const productDbArr = await Product.findOne({ user: username, url: url })
@@ -33,7 +34,7 @@ async function addToDb(price, productName, url, bot, username, userId) {
 					currency: currency
 				});
 			await product.save()
-				.then(console.log('added data to mongo...'))
+				.then(console.log('added data to mongo...', username, productName))
 				.then(bot.telegram.sendMessage(userId, (`${productName} успешно добавлен.\nТекущая цена ${price}${currency}`)))
 				.catch(error => console.error(error))
 		};

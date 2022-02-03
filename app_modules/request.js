@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 
 async function requestProducts(bot, userId) {
 	try {
-		const created = await Product.find({ user: userId });
+		const created = await Product.find({ userId: userId });
 		let post = '';
 		let elementPriceLength;
 		let priceLast;

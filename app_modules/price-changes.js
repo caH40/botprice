@@ -4,7 +4,7 @@ async function priceChanges(ctx, username) {
 	try {
 		const productArr = await Product.find({ user: username });
 		let countNull = 0;
-		productArr.forEach(product => {
+		productArr.forEach(async product => {
 			const firstPost = `${product.nameRequest}\n<a href="${product.url}">${product.domainName}\n</a>`;
 			let post = firstPost
 
@@ -22,14 +22,16 @@ async function priceChanges(ctx, username) {
 				}
 			}
 			if (productArr.length === countNull) {
-				ctx.reply(`Не было изменений цен.`).catch(error => console.log(error));
+				await ctx.reply(`Не было изменений цен.`).catch(error => console.log(error));
 			}
 			if (post !== firstPost) {
-				ctx.reply(post, { parse_mode: 'html', disable_web_page_preview: true }).catch(error => console.log(error));
+				await ctx.reply(post, { parse_mode: 'html', disable_web_page_preview: true }).catch(error => console.log(error));
 			}
-
-
 		});
+		//если нет отслеживаемых товаров, то сообщение
+		if (!productArr[0]) {
+			await ctx.reply('Вы не отслеживаете цены на велотовары.');
+		}
 	} catch (error) {
 		console.log(error);
 	}

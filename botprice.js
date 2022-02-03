@@ -53,7 +53,7 @@ bot.command('/new', async (ctx) => {
 });
 
 bot.command('/request', async (ctx) => {
-	const userId = await ctx.message.from.id;
+	const userId = ctx.message.from.id;
 	await ctx.reply('Отслеживаемые товары:').catch((error) => console.log(error));
 	await requestProducts(bot, userId).catch((error) => console.log(error));
 });
