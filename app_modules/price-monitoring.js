@@ -3,8 +3,9 @@ const Product = require('../models/Product');
 
 async function priceMonitoring(bot) {
 	try {
-		const productDbArr = await Product.find();
+		const productDbArr = await Product.find({ updated: true });
 		productDbArr.forEach(async element => {
+			await Product.findOneAndUpdate({ _id: element._id }, { $set: { updated: false } });
 			elementPriceLength = element.prices.length;
 			// выполнять вычисление изменение цены только когда в массиве цен элементов больше одного
 			if (elementPriceLength > 1) {

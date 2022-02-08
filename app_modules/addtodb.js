@@ -19,7 +19,7 @@ async function addToDb(price, productName, url, bot, username, userId) {
 			const productDbArr = await Product.findOne({ user: username, url: url })
 			let priceObj = productDbArr.prices;
 			priceObj.push({ date, price });
-			await Product.findOneAndUpdate({ user: username, url: url }, { $set: { lastUpdate: dateString, prices: priceObj } })
+			await Product.findOneAndUpdate({ user: username, url: url }, { $set: { lastUpdate: dateString, prices: priceObj, updated: true } })
 		} else {
 			const domainName = url.match(/https:\/\/(.*?)\//)[1];
 			const product = await new Product(
@@ -31,7 +31,8 @@ async function addToDb(price, productName, url, bot, username, userId) {
 					domainName: domainName,
 					lastUpdate: dateString,
 					prices: { date, price },
-					currency: currency
+					currency: currency,
+					updated: false
 				});
 			await product.save()
 				.then(console.log('added data to mongo...', username, productName))
