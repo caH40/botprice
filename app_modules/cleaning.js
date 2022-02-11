@@ -4,7 +4,7 @@ function cleaning(price, url) {
 			price = price.match(/^([^RUB]+)/g)[0];
 		}
 		if (url.includes('aliexpress.ru')) {
-			price = price.match(/^([^руб.]+)/g)[0];
+			price = price.match(/^.{1,12},\d\d/gm)[0];
 		}
 		price = price.match(/[0-9]/g).join('');
 		const priceLength = price.length;
