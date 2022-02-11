@@ -4,7 +4,7 @@ const cleaning = require('./cleaning');
 
 async function addToDb(price, productName, url, bot, username, userId) {
 	try {
-		price = cleaning(price, url).toLocaleString();
+		price = cleaning(price, url);
 		let currency = '';
 		if (url.includes('chainreactioncycles') || url.includes('aliexpress.ru') || url.includes('citilink.ru')) {
 			currency = 'RUB';
@@ -13,14 +13,9 @@ async function addToDb(price, productName, url, bot, username, userId) {
 		}
 		const date = new Date().getTime();
 		const dateString = new Date().toLocaleString();
-		//!! два раза один и тот же запрос в БД
-		let productDb = await Product.findOne({ user: username, url: url });
-		if (productDb) {
-			const productDbArr = await Product.findOne({ user: username, url: url })
-			let priceObj = productDbArr.prices;
-			priceObj.push({ date, price });
-			await Product.findOneAndUpdate({ user: username, url: url }, { $set: { lastUpdate: dateString, prices: priceObj, updated: true } })
-		} else {
+
+		let productExists = await Product.findOneAndUpdate({ user: username, url: url }, { $set: { lastUpdate: dateString, updated: true }, $push: { prices: { date, price } } });
+		if (!productExists) {
 			const domainName = url.match(/https:\/\/(.*?)\//)[1];
 			const product = await new Product(
 				{
@@ -38,7 +33,7 @@ async function addToDb(price, productName, url, bot, username, userId) {
 				.then(console.log('added data to mongo...', username, productName))
 				.then(bot.telegram.sendMessage(userId, (`${productName} успешно добавлен.\nТекущая цена ${price}${currency}`)))
 				.catch(error => console.error(error))
-		};
+		}
 	} catch (error) {
 		console.log(error);
 	}
