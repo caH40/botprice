@@ -16,6 +16,9 @@ function getSelectorName(url) {
 	if (url.includes('aliexpress.ru')) {
 		return '.Product_Name__productTitleText__hntp3';
 	}
+	if (url.includes('citilink.ru')) {
+		return '.ProductHeader__title';
+	}
 }
 
 module.exports = getSelectorName;

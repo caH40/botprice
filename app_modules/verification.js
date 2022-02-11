@@ -27,7 +27,7 @@ async function verification(url, username, ctx) {
 		// const domainName = url.match(/https:\/\/(.*?)\//);
 		// проверка наличия названий сайтов для мониторинга в url
 		let condition = false;
-		const site = ['bike-components', 'bike-discount', 'chainreactioncycles', 'aliexpress.ru'];
+		const site = ['bike-components', 'bike-discount', 'chainreactioncycles', 'aliexpress.ru', 'citilink.ru'];
 		site.forEach(element => {
 			condition = condition || url.includes(element);
 		})

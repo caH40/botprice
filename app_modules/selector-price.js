@@ -16,6 +16,9 @@ function getSelectorPrice(url) {
 		if (url.includes('aliexpress.ru')) {
 			return '.product-price-current';
 		}
+		if (url.includes('citilink.ru')) {
+			return '.ProductHeader__price-default_current-price';
+		}
 	} catch (error) {
 		console.log(error);
 	}

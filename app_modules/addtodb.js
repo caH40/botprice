@@ -4,9 +4,9 @@ const cleaning = require('./cleaning');
 
 async function addToDb(price, productName, url, bot, username, userId) {
 	try {
-		price = cleaning(price, url);
+		price = cleaning(price, url).toLocaleString();
 		let currency = '';
-		if (url.includes('chainreactioncycles') || url.includes('aliexpress.ru')) {
+		if (url.includes('chainreactioncycles') || url.includes('aliexpress.ru') || url.includes('citilink.ru')) {
 			currency = 'RUB';
 		} else {
 			currency = '€';
