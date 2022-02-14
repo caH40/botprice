@@ -58,8 +58,8 @@ bot.command('/request', async (ctx) => {
 });
 
 bot.command('/changes', async (ctx) => {
-	const username = ctx.update.message.from.username;
-	await priceChanges(ctx, username).catch((error) => console.log(error));
+	const userId = ctx.message.from.id;
+	await priceChanges(ctx, userId).catch((error) => console.log(error));
 });
 
 bot.command('/description', async (ctx) => {

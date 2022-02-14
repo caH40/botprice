@@ -1,10 +1,11 @@
 // запрос всех отслеживаемых товаров
 // принимает функция ctx и userId
 const Product = require('../models/Product');
+const cleanPost = require('./clean-post');
 
 async function requestProducts(bot, userId) {
 	try {
-		const created = await Product.find({ userId: userId });
+		const products = await Product.find({ userId: userId });
 		var postAllStore = {
 			discount: '<u>Магазин bike-discount:</u>\n',
 			components: '<u>Магазин bike-components:</u>\n',
@@ -19,62 +20,21 @@ async function requestProducts(bot, userId) {
 			postAllStore[store] = postAllStore[store] + `<a href="${element.url}"><b>-${element.nameRequest}</b></a>- <u>${priceLast}${element.currency}</u>\n`;
 		}
 
-		function cleanPost(postAllStore) {
-			console.log('Запуск функции cleanPost')
-			const postKeys = Object.keys(postAllStore);
-			const postKeysLengthArr = postKeys.length;
-			let postValue = [];
-			postKeys.forEach(element => {
-				postValue.push(postAllStore[element]);
-			})
-			postAllStore = {};
-
-			for (let i = 0; i < postKeysLengthArr; i++) {
-				if (postKeys[i] === 'discount') {
-					if (postValue[i] !== '<u>Магазин bike-discount:</u>\n') {
-						postAllStore.discount = postValue[i];
-					}
-				}
-				if (postKeys[i] === 'components') {
-					if (postValue[i] !== '<u>Магазин bike-components:</u>\n') {
-						postAllStore.components = postValue[i];
-					}
-				}
-				if (postKeys[i] === 'chainReaction') {
-					if (postValue[i] !== '<u>Магазин ChainReaction:</u>\n') {
-						postAllStore.chainReaction = postValue[i];
-					}
-				}
-				if (postKeys[i] === 'aliexpress') {
-					if (postValue[i] !== '<u>Магазин aliexpress:</u>\n') {
-						postAllStore.aliexpress = postValue[i];
-					}
-				}
-				if (postKeys[i] === 'citilink') {
-					if (postValue[i] !== '<u>Магазин citilink:</u>\n') {
-						postAllStore.citilink = postValue[i];
-					}
-				}
+		for (let i = 0; i < products.length; i++) {
+			if (products[i].domainName === 'www.bike-discount.de') {
+				postMessage(products[i], 'discount');
 			}
-			return postAllStore;
-		}
-
-		for (let i = 0; i < created.length; i++) {
-			// switch (element.domainName) {
-			if (created[i].domainName === 'www.bike-discount.de') {
-				postMessage(created[i], 'discount');
+			if (products[i].domainName === 'www.bike-components.de') {
+				postMessage(products[i], 'components');
 			}
-			if (created[i].domainName === 'www.bike-components.de') {
-				postMessage(created[i], 'components');
+			if (products[i].domainName === 'www.chainreactioncycles.com') {
+				postMessage(products[i], 'chainReaction');
 			}
-			if (created[i].domainName === 'www.chainreactioncycles.com') {
-				postMessage(created[i], 'chainReaction');
+			if (products[i].domainName === 'aliexpress.ru') {
+				postMessage(products[i], 'aliexpress');
 			}
-			if (created[i].domainName === 'aliexpress.ru') {
-				postMessage(created[i], 'aliexpress');
-			}
-			if (created[i].domainName === 'www.citilink.ru') {
-				postMessage(created[i], 'citilink');
+			if (products[i].domainName === 'www.citilink.ru') {
+				postMessage(products[i], 'citilink');
 			}
 		}
 		postAllStore = cleanPost(postAllStore);
