@@ -14,10 +14,10 @@ async function requestProducts(bot, userId) {
 			citilink: '<u>Магазин citilink:</u>\n'
 		};
 
-		function postMessage(element, store) {
-			let elementPriceLength = element.prices.length;
-			let priceLast = element.prices[elementPriceLength - 1].price; //цена в последнем элементе массива
-			postAllStore[store] = postAllStore[store] + `<a href="${element.url}"><b>-${element.nameRequest}</b></a>- <u>${priceLast}${element.currency}</u>\n`;
+		function postMessage(product, store) {
+			let productPriceLength = product.prices.length;
+			let priceLast = product.prices[productPriceLength - 1].price; //цена в последнем элементе массива
+			postAllStore[store] = postAllStore[store] + `<a href="${product.url}"><b>-${product.nameRequest}</b></a>- <u>${priceLast}${product.currency}</u>\n`;
 		}
 
 		for (let i = 0; i < products.length; i++) {

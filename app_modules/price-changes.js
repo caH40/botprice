@@ -17,21 +17,17 @@ async function priceChanges(ctx, userId) {
 			var priceChange;
 			for (let i = 1; i < productPriceLength; i++) {
 				const dateNow = new Date(product.prices[i].date).toLocaleString();
-				priceChange = (product.prices[i].price - product.prices[i - 1].price).toFixed(2);
-				if (priceChange > 0) {
-					postAllStore[store] = postAllStore[store] + `<a href="${product.url}"><b>-${product.nameRequest}</b></a>- <u>\n${dateNow}, изменение: +${priceChange}${product.currency}</u>\n`;
-					pricesNotChanges = false;
-				}
-				if (priceChange < 0) {
+				priceChange = Number((product.prices[i].price - product.prices[i - 1].price).toFixed(2));
+				// определение знака перед числом				
+				if (priceChange !== 0) {
+					priceChange = priceChange < 0 ? priceChange : `+${priceChange}`;
 					postAllStore[store] = postAllStore[store] + `<a href="${product.url}"><b>-${product.nameRequest}</b></a>- <u>\n${dateNow}, изменение: ${priceChange}${product.currency}</u>\n`;
 					pricesNotChanges = false;
 				} else {
 					pricesNotChanges = pricesNotChanges && true;
 				}
-
 			}
 		}
-
 		for (let i = 0; i < products.length; i++) {
 			if (products[i].domainName === 'www.bike-discount.de') {
 				postMessage(products[i], 'discount');
