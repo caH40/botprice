@@ -38,7 +38,10 @@ async function requestProducts(bot, userId) {
 			}
 		}
 		postAllStore = cleanPost(postAllStore);
-		// const notNull = post ? post : 'Вы не отслеживаете цены на велотовары.';
+
+
+		// const notNull = Object.keys(postAllStore)[0] ? postAllStore : 'Вы не отслеживаете цены на велотовары.';
+		// console.log(Object.keys(postAllStore)[0])
 		Object.keys(postAllStore).forEach(async element => {
 			await bot.telegram.sendMessage(userId, postAllStore[element], { parse_mode: 'html', disable_web_page_preview: true });
 		})

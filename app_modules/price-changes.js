@@ -14,18 +14,23 @@ async function priceChanges(ctx, userId) {
 		};
 		function postMessage(product, store, checkerChanges) {
 			let productPriceLength = product.prices.length;
+			var countNull = 0;
 			var priceChange;
+			var messagePriceChanges = '';
 			for (let i = 1; i < productPriceLength; i++) {
-				const dateNow = new Date(product.prices[i].date).toLocaleString();
+				const dateChanges = new Date(product.prices[i].date).toLocaleString();
 				priceChange = Number((product.prices[i].price - product.prices[i - 1].price).toFixed(2));
-				// определение знака перед числом				
 				if (priceChange !== 0) {
 					priceChange = priceChange < 0 ? priceChange : `+${priceChange}`;
-					postAllStore[store] = postAllStore[store] + `<a href="${product.url}"><b>-${product.nameRequest}</b></a>- <u>\n${dateNow}, изменение: ${priceChange}${product.currency}</u>\n`;
+					messagePriceChanges = messagePriceChanges + `<u>\n${dateChanges}, изменение: ${priceChange}${product.currency}</u>`;
 					pricesNotChanges = false;
+					countNull++
 				} else {
 					pricesNotChanges = pricesNotChanges && true;
 				}
+			}
+			if (countNull !== 0) {
+				postAllStore[store] = postAllStore[store] + `<a href="${product.url}"><b>-${product.nameRequest}</b></a>:${messagePriceChanges} `;
 			}
 		}
 		for (let i = 0; i < products.length; i++) {
